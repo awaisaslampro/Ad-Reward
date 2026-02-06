@@ -143,7 +143,14 @@ export default function DashboardPage() {
 
       {/* Footer */}
       <footer className="bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 py-8 mt-12">
-        <div className="container mx-auto px-4 text-center">
+        <div className="container mx-auto px-4 text-center space-y-4">
+          <a 
+            href="/project.zip" 
+            download="project.zip"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-600 hover:text-emerald-700 underline underline-offset-4 decoration-2"
+          >
+            Download Project Source (.zip)
+          </a>
           <p className="text-sm text-zinc-500 font-medium">
             © 2026 AdClick Rewards. All rights reserved.
           </p>
