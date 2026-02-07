@@ -4,8 +4,8 @@ import { useLocation } from "wouter";
 import { AdCard } from "@/components/ui/ad-card";
 import { LogOut, Trophy, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
-import Confetti from 'react-confetti';
-import { useWindowSize } from 'react-use';
+import Confetti from "react-confetti";
+import { useWindowSize } from "react-use";
 
 export default function DashboardPage() {
   const [, setLocation] = useLocation();
@@ -31,13 +31,20 @@ export default function DashboardPage() {
     setLocation("/login");
   };
 
-  const completedCount = ads.filter(a => a.isClicked).length;
+  const completedCount = ads.filter((a) => a.isClicked).length;
   const progress = (completedCount / 15) * 100;
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 flex flex-col font-sans relative">
-      {showConfetti && <Confetti width={width} height={height} recycle={false} numberOfPieces={500} />}
-      
+      {showConfetti && (
+        <Confetti
+          width={width}
+          height={height}
+          recycle={false}
+          numberOfPieces={500}
+        />
+      )}
+
       {/* Header */}
       <header className="sticky top-0 z-50 w-full bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border-b border-zinc-200 dark:border-zinc-800">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -52,12 +59,14 @@ export default function DashboardPage() {
 
           <div className="flex items-center gap-6">
             <div className="hidden md:flex flex-col items-end">
-              <span className="text-xs text-zinc-500 font-medium uppercase tracking-wider">Current Balance</span>
+              <span className="text-xs text-zinc-500 font-medium uppercase tracking-wider">
+                Current Balance
+              </span>
               <div className="flex items-center gap-1.5 text-emerald-600 font-bold text-xl leading-none">
                 <span>€{balance}</span>
               </div>
             </div>
-            
+
             <div className="h-8 w-px bg-zinc-200 dark:bg-zinc-700 hidden md:block" />
 
             <div className="flex items-center gap-3">
@@ -69,7 +78,7 @@ export default function DashboardPage() {
                   {user?.username}
                 </span>
               </div>
-              
+
               <button
                 onClick={handleLogout}
                 className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full text-zinc-500 transition-colors"
@@ -84,7 +93,6 @@ export default function DashboardPage() {
 
       {/* Main Content */}
       <main className="flex-1 container mx-auto px-4 py-8">
-        
         {/* Progress Section */}
         <section className="mb-12">
           <div className="bg-zinc-900 dark:bg-black rounded-3xl p-8 text-white relative overflow-hidden shadow-2xl">
@@ -98,17 +106,20 @@ export default function DashboardPage() {
                   Monthly Goal <Trophy className="w-6 h-6 text-emerald-400" />
                 </h2>
                 <p className="text-zinc-400 max-w-md">
-                  Explore all 15 sponsored products this month to unlock your full reward.
+                  Explore all 15 sponsored products this month to unlock your
+                  full reward.
                 </p>
               </div>
 
               <div className="w-full max-w-md">
                 <div className="flex justify-between text-sm font-medium mb-2">
-                  <span className="text-emerald-400">{completedCount} / 15 Clicked</span>
+                  <span className="text-emerald-400">
+                    {completedCount} / 15 Clicked
+                  </span>
                   <span className="text-zinc-500">€30 Potential</span>
                 </div>
                 <div className="h-4 bg-zinc-800 rounded-full overflow-hidden border border-zinc-700">
-                  <motion.div 
+                  <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${progress}%` }}
                     transition={{ duration: 1, ease: "easeOut" }}
@@ -144,13 +155,6 @@ export default function DashboardPage() {
       {/* Footer */}
       <footer className="bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 py-8 mt-12">
         <div className="container mx-auto px-4 text-center space-y-4">
-          <a 
-            href="/project.zip" 
-            download="project.zip"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-600 hover:text-emerald-700 underline underline-offset-4 decoration-2"
-          >
-            Download Project Source (.zip)
-          </a>
           <p className="text-sm text-zinc-500 font-medium">
             © 2026 AdClick Rewards. All rights reserved.
           </p>
