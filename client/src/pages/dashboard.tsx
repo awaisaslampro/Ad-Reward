@@ -106,8 +106,7 @@ export default function DashboardPage() {
                   Monthly Goal <Trophy className="w-6 h-6 text-emerald-400" />
                 </h2>
                 <p className="text-zinc-400 max-w-md">
-                  Explore all 15 sponsored products this month to unlock your
-                  full reward.
+                  Explore all sponsored products to unlock your full reward.
                 </p>
               </div>
 
@@ -116,7 +115,7 @@ export default function DashboardPage() {
                   <span className="text-emerald-400">
                     {completedCount} / 15 Clicked
                   </span>
-                  <span className="text-zinc-500">€30 Potential</span>
+                  <span className="text-zinc-500">€2 Potential</span>
                 </div>
                 <div className="h-4 bg-zinc-800 rounded-full overflow-hidden border border-zinc-700">
                   <motion.div
@@ -138,7 +137,7 @@ export default function DashboardPage() {
                 className="mt-8 bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4 flex items-center justify-center gap-3 text-emerald-300 font-medium"
               >
                 <Sparkles className="w-5 h-5 text-emerald-400" />
-                🎉 Goal Reached! Come back next month.
+                🎉 Goal Reached! See you tomorrow.
               </motion.div>
             )}
           </div>
