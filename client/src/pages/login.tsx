@@ -19,7 +19,7 @@ export default function LoginPage() {
 
     // Simulate network delay for effect
     setTimeout(() => {
-      if (username === "shoabshah" && password === "Qwert123") {
+      if (username === "stevelee" && password === "Qwert123") {
         login(username);
         setLocation("/dashboard");
       } else {
@@ -37,7 +37,7 @@ export default function LoginPage() {
         <div className="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-blue-400/20 rounded-full blur-[100px]" />
       </div>
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -83,9 +83,9 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
+                animate={{ opacity: 1, height: "auto" }}
                 className="flex items-center gap-2 text-red-500 text-sm bg-red-50 dark:bg-red-900/10 p-3 rounded-lg"
               >
                 <AlertCircle className="w-4 h-4 shrink-0" />
@@ -97,7 +97,7 @@ export default function LoginPage() {
               data-testid="button-login"
               type="submit"
               disabled={isLoading}
-              className="w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl shadow-lg shadow-emerald-500/20 transition-all hover:scale-[1.02] disabled:opacity-70 disabled:hover:scale-100 flex items-center justify-center gap-2"
+              className="cursor-pointer w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl shadow-lg shadow-emerald-500/20 transition-all hover:scale-[1.02] disabled:opacity-70 disabled:hover:scale-100 flex items-center justify-center gap-2"
             >
               {isLoading ? (
                 <>
