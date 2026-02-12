@@ -73,22 +73,22 @@ interface AdState {
 // Fixed product data to map to our 15 images
 const PRODUCT_DATA = [
   // Tech (8 images)
-  { title: "Quantum Headset X", price: " 299", category: "Tech" },
-  { title: "Smart Lens Pro", price: " 149", category: "Tech" },
-  { title: "Nebula Drone", price: " 899", category: "Tech" },
-  { title: "CyberWatch 5", price: " 349", category: "Tech" },
-  { title: "Sonic Budz", price: " 129", category: "Tech" },
-  { title: "HyperDeck Dock", price: " 199", category: "Tech" },
-  { title: "StreamCam Ultra", price: " 179", category: "Tech" },
-  { title: "NanoCharge Pad", price: " 49", category: "Tech" },
+  { title: "Quantum Headset X", price: "€299", category: "Tech" },
+  { title: "Smart Lens Pro", price: "€149", category: "Tech" },
+  { title: "Nebula Drone", price: "€899", category: "Tech" },
+  { title: "CyberWatch 5", price: "€349", category: "Tech" },
+  { title: "Sonic Budz", price: "€129", category: "Tech" },
+  { title: "HyperDeck Dock", price: "€199", category: "Tech" },
+  { title: "StreamCam Ultra", price: "€179", category: "Tech" },
+  { title: "NanoCharge Pad", price: "€49", category: "Tech" },
   // Home (7 images)
-  { title: "Lumina Lamp", price: " 89", category: "Home" },
-  { title: "Zen Diffuser", price: " 45", category: "Home" },
-  { title: "Aero Vase", price: " 65", category: "Home" },
-  { title: "Moda Chair", price: " 249", category: "Home" },
-  { title: "Pure Air Mini", price: " 120", category: "Home" },
-  { title: "Ceramic Set", price: " 75", category: "Home" },
-  { title: "Botanical Frame", price: " 35", category: "Home" },
+  { title: "Lumina Lamp", price: "€89", category: "Home" },
+  { title: "Zen Diffuser", price: "€45", category: "Home" },
+  { title: "Aero Vase", price: "€65", category: "Home" },
+  { title: "Moda Chair", price: "€249", category: "Home" },
+  { title: "Pure Air Mini", price: "€120", category: "Home" },
+  { title: "Ceramic Set", price: "€75", category: "Home" },
+  { title: "Botanical Frame", price: "€35", category: "Home" },
 ] as const;
 
 // Image paths
