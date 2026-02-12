@@ -103,19 +103,22 @@ export default function DashboardPage() {
             </span>
           </div>
 
-          <div className="flex items-center gap-6">
-            <div className="hidden md:flex flex-col items-end">
-              <span className="text-xs text-zinc-500 font-medium uppercase tracking-wider">
+          <div className="flex items-center gap-6 justify-self-center">
+            <div className="flex flex-col items-center text-center">
+              <span className="text-xs text-zinc-500 font-medium uppercase tracking-wider hidden md:block">
                 Current Balance
               </span>
+              <span className="text-xs text-zinc-500 font-medium uppercase tracking-wider md:hidden">
+                Balance
+              </span>
               <div className="flex items-center gap-1.5 text-emerald-600 font-bold text-xl leading-none">
-                <span>{balance}</span>
+                <span>€{balance}</span>
               </div>
             </div>
 
             <div className="h-8 w-px bg-zinc-200 dark:bg-zinc-700 hidden md:block" />
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 justify-self-center">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
@@ -246,14 +249,14 @@ export default function DashboardPage() {
       <footer className="bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 py-8 mt-12">
         <div className="container mx-auto px-4 text-center space-y-4">
           <p className="text-sm text-zinc-500 font-medium">
-            Â© 2026 AdClick Rewards. All rights reserved.
+            © 2026 AdClick Rewards. All rights reserved.
           </p>
         </div>
       </footer>
 
       <Dialog open={isPaymentOpen} onOpenChange={setIsPaymentOpen}>
         <DialogContent
-          className="max-w-xl"
+          className="w-[calc(100%-2rem)] max-w-xl max-h-[85vh] overflow-y-auto"
           onOpenAutoFocus={(event) => event.preventDefault()}
         >
           <DialogHeader>
@@ -364,4 +367,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-

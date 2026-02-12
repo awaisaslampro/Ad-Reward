@@ -23,6 +23,11 @@ export function AdCard({ ad, onClick }: AdCardProps) {
         <img
           src={ad.image}
           alt={ad.title}
+          loading="lazy"
+          decoding="async"
+          width={640}
+          height={480}
+          sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           className={`w-full h-full object-cover transition-transform duration-500 ${
             ad.isClicked ? 'grayscale scale-100' : 'group-hover:scale-110'
           }`}
