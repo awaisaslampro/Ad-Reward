@@ -66,6 +66,7 @@ interface AdState {
   rewardDayCount: number;
   goalReached: boolean;
   initializeMonth: () => void;
+  resetDailyIfNeeded: () => void;
   clickAd: (id: string) => void;
   resetForDemo: () => void; // Optional helper
 }
@@ -151,7 +152,32 @@ const generateAds = (): Ad[] => {
 
 export const useAdStore = create<AdState>()(
   persist(
-    (set, get) => ({
+    (set, get) => {
+      const resetDailyIfNeeded = () => {
+        const now = Date.now();
+        const { ads, balance, lastDailyResetKey, rewardDayCount } = get();
+        const todayKey = getPortugalDayKey(now);
+
+        if (lastDailyResetKey === "") {
+          set({ lastDailyResetKey: todayKey });
+          return;
+        }
+
+        if (lastDailyResetKey !== todayKey) {
+          const resetAds = ads.map((ad) => ({ ...ad, isClicked: false }));
+          const shouldResetCycle = rewardDayCount >= 15;
+          set({
+            ads: resetAds,
+            lastDailyResetKey: todayKey,
+            dailyClickCount: 0,
+            balance: shouldResetCycle ? 0 : balance,
+            rewardDayCount: shouldResetCycle ? 0 : rewardDayCount,
+            goalReached: false,
+          });
+        }
+      };
+
+      return {
       ads: [],
       balance: 0,
       lastGenerated: 0,
@@ -181,33 +207,14 @@ export const useAdStore = create<AdState>()(
         }
       },
 
-      clickAd: (id) => {
-        const now = Date.now();
-        const {
-          ads,
-          balance,
-          lastDailyResetKey,
-          dailyClickCount,
-          rewardDayCount,
-        } = get();
-        const todayKey = getPortugalDayKey(now);
+      resetDailyIfNeeded,
 
-        // Reset daily clicks and isClicked flags once per day
-        if (lastDailyResetKey === "" || lastDailyResetKey !== todayKey) {
-          const resetAds = ads.map((ad) => ({ ...ad, isClicked: false }));
-          const shouldResetCycle = rewardDayCount >= 15;
-          set({
-            ads: resetAds,
-            lastDailyResetKey: todayKey,
-            dailyClickCount: 0,
-            balance: shouldResetCycle ? 0 : balance,
-            rewardDayCount: shouldResetCycle ? 0 : rewardDayCount,
-            goalReached: false,
-          });
-        }
+      clickAd: (id) => {
+        resetDailyIfNeeded();
 
         const {
           ads: currentAds,
+          balance,
           dailyClickCount: currentDailyCount,
           rewardDayCount: currentRewardDayCount,
         } = get();
@@ -258,7 +265,8 @@ export const useAdStore = create<AdState>()(
           goalReached: false,
         });
       },
-    }),
+    };
+    },
     {
       name: "adclick-data-storage",
     },

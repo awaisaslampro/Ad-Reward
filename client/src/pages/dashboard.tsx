@@ -36,7 +36,14 @@ import { Button } from "@/components/ui/button";
 export default function DashboardPage() {
   const [, setLocation] = useLocation();
   const { user, logout } = useAuthStore();
-  const { ads, balance, goalReached, initializeMonth, clickAd } = useAdStore();
+  const {
+    ads,
+    balance,
+    goalReached,
+    initializeMonth,
+    resetDailyIfNeeded,
+    clickAd,
+  } = useAdStore();
   const { width, height } = useWindowSize();
   const [showConfetti, setShowConfetti] = useState(false);
   const [isDark, setIsDark] = useState(false);
@@ -47,6 +54,12 @@ export default function DashboardPage() {
   useEffect(() => {
     initializeMonth();
   }, [initializeMonth]);
+
+  useEffect(() => {
+    resetDailyIfNeeded();
+    const interval = setInterval(resetDailyIfNeeded, 5 * 1000);
+    return () => clearInterval(interval);
+  }, [resetDailyIfNeeded]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
