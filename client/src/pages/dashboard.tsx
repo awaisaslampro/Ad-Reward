@@ -52,8 +52,8 @@ export default function DashboardPage() {
   const userInitial = userName.charAt(0).toUpperCase();
 
   useEffect(() => {
-    initializeMonth();
-  }, [initializeMonth]);
+    initializeMonth().catch(console.error);
+  }, []);
 
   useEffect(() => {
     resetDailyIfNeeded();
@@ -210,7 +210,8 @@ export default function DashboardPage() {
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
               <div className="text-center md:text-left">
                 <h2 className="font-heading text-3xl font-bold mb-2 flex items-center justify-center md:justify-start gap-2">
-                  Monthly Goal <Trophy className="w-6 h-6 text-emerald-400" />
+                  Complete Monthly Goal{" "}
+                  <Trophy className="w-6 h-6 text-emerald-400" />
                 </h2>
                 <p className="text-zinc-400 max-w-md">
                   Explore all sponsored products to unlock your full reward.

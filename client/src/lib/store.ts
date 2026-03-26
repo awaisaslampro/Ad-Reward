@@ -65,36 +65,57 @@ interface AdState {
   dailyClickCount: number;
   rewardDayCount: number;
   goalReached: boolean;
-  initializeMonth: () => void;
+  initializeMonth: () => Promise<void>;
   resetDailyIfNeeded: () => void;
   clickAd: (id: string) => void;
-  resetForDemo: () => void; // Optional helper
+  resetForDemo: () => Promise<void>; // Optional helper
 }
 
-// Fixed product data to map to our 15 images
+// Expanded product data for variety (30+ entries, pick 15 random products)
 const PRODUCT_DATA = [
-  // Tech (8 images)
+  // Tech products (16 for variety)
   { title: "Quantum Headset X", price: "€299", category: "Tech" },
   { title: "Smart Lens Pro", price: "€149", category: "Tech" },
-  { title: "Nebula Drone", price: "€899", category: "Tech" },
-  { title: "CyberWatch 5", price: "€349", category: "Tech" },
-  { title: "Sonic Budz", price: "€129", category: "Tech" },
-  { title: "HyperDeck Dock", price: "€199", category: "Tech" },
-  { title: "StreamCam Ultra", price: "€179", category: "Tech" },
-  { title: "NanoCharge Pad", price: "€49", category: "Tech" },
-  // Home (7 images)
-  { title: "Lumina Lamp", price: "€89", category: "Home" },
-  { title: "Zen Diffuser", price: "€45", category: "Home" },
-  { title: "Aero Vase", price: "€65", category: "Home" },
-  { title: "Moda Chair", price: "€249", category: "Home" },
-  { title: "Pure Air Mini", price: "€120", category: "Home" },
-  { title: "Ceramic Set", price: "€75", category: "Home" },
-  { title: "Botanical Frame", price: "€35", category: "Home" },
+  { title: "Nebula Drone Pro", price: "€899", category: "Tech" },
+  { title: "CyberWatch 5 Ultra", price: "€349", category: "Tech" },
+  { title: "Sonic Budz Max", price: "€129", category: "Tech" },
+  { title: "HyperDeck Dock Pro", price: "€199", category: "Tech" },
+  { title: "StreamCam Ultra HD", price: "€179", category: "Tech" },
+  { title: "NanoCharge Pad Fast", price: "€49", category: "Tech" },
+  { title: "PixelPhone 14", price: "€999", category: "Tech" },
+  { title: "Nova Laptop Air", price: "€1299", category: "Tech" },
+  { title: "Echo Speaker Pro", price: "€89", category: "Tech" },
+  { title: "FitTrack Band", price: "€79", category: "Tech" },
+  { title: "VR Horizon 2", price: "€499", category: "Tech" },
+  { title: "Bolt Charger", price: "€29", category: "Tech" },
+  { title: "Cloud Mouse Pro", price: "€69", category: "Tech" },
+  { title: "Aura Keyboard", price: "€159", category: "Tech" },
+  // Home products (16 for variety)
+  { title: "Lumina Lamp Pro", price: "€89", category: "Home" },
+  { title: "Zen Diffuser Ultra", price: "€45", category: "Home" },
+  { title: "Aero Vase Crystal", price: "€65", category: "Home" },
+  { title: "Moda Chair Lux", price: "€249", category: "Home" },
+  { title: "Pure Air Mini Pro", price: "€120", category: "Home" },
+  { title: "Ceramic Set Premium", price: "€75", category: "Home" },
+  { title: "Botanical Frame Gold", price: "€35", category: "Home" },
+  { title: "Velvet Sofa Mini", price: "€399", category: "Home" },
+  { title: "Ocean Rug", price: "€189", category: "Home" },
+  { title: "Silk Bedding Set", price: "€279", category: "Home" },
+  { title: "Marble Table", price: "€599", category: "Home" },
+  { title: "Wooden Shelf Unit", price: "€129", category: "Home" },
+  { title: "Crystal Decanter", price: "€99", category: "Home" },
+  { title: "Bamboo Basket", price: "€39", category: "Home" },
+  { title: "Wall Art Set", price: "€69", category: "Home" },
+  { title: "Cozy Blanket", price: "€59", category: "Home" },
 ] as const;
+
+const NUM_TECH_ADS = 8;
+const NUM_HOME_ADS = 7;
 
 // Image paths
 
-const TECH_IMAGES = [
+// Expanded image pools (duplicate existing for variety, 16 each)
+const TECH_IMAGES_POOL = [
   tech11,
   tech12,
   tech13,
@@ -103,9 +124,34 @@ const TECH_IMAGES = [
   tech16,
   tech17,
   tech18,
+  tech11,
+  tech12,
+  tech13,
+  tech14,
+  tech15,
+  tech16,
+  tech17,
+  tech18, // duplicates for more random options
 ];
 
-const HOME_IMAGES = [home11, home12, home13, home14, home15, home16, home17];
+const HOME_IMAGES_POOL = [
+  home11,
+  home12,
+  home13,
+  home14,
+  home15,
+  home16,
+  home17,
+  home11,
+  home12,
+  home13,
+  home14,
+  home15,
+  home16,
+  home17, // duplicates
+  home11,
+  home12, // extra for pool size
+];
 
 const getPortugalDayKey = (timestamp: number): string => {
   const formatter = new Intl.DateTimeFormat("en-CA", {
@@ -117,38 +163,56 @@ const getPortugalDayKey = (timestamp: number): string => {
   return formatter.format(new Date(timestamp));
 };
 
-const generateAds = (): Ad[] => {
-  // We have exactly 15 products and 15 images (8 tech + 7 home = 15).
-  // Perfect match.
-  const ads: Ad[] = [];
+// Fake API simulation
+const fetchRandomAds = async (): Promise<Ad[]> => {
+  // Simulate API delay
+  await new Promise((resolve) =>
+    setTimeout(resolve, 300 + Math.random() * 400),
+  );
 
-  // Add Tech
-  for (let i = 0; i < 8; i++) {
+  const ads: Ad[] = [];
+  let techId = 0;
+  let homeId = 0;
+
+  // Select random Tech products (always 8)
+  const techProducts = PRODUCT_DATA.filter((p) => p.category === "Tech");
+  for (let i = 0; i < NUM_TECH_ADS; i++) {
+    const randomTechProduct =
+      techProducts[Math.floor(Math.random() * techProducts.length)];
+    const randomTechImage =
+      TECH_IMAGES_POOL[Math.floor(Math.random() * TECH_IMAGES_POOL.length)];
     ads.push({
-      id: `tech-${i}`,
-      title: PRODUCT_DATA[i].title,
-      price: PRODUCT_DATA[i].price,
-      image: TECH_IMAGES[i],
+      id: `tech-${techId++}`,
+      title: randomTechProduct.title,
+      price: randomTechProduct.price,
+      image: randomTechImage,
       category: "Tech",
       isClicked: false,
     });
   }
 
-  // Add Home
-  for (let i = 0; i < 7; i++) {
+  // Select random Home products (always 7)
+  const homeProducts = PRODUCT_DATA.filter((p) => p.category === "Home");
+  for (let i = 0; i < NUM_HOME_ADS; i++) {
+    const randomHomeProduct =
+      homeProducts[Math.floor(Math.random() * homeProducts.length)];
+    const randomHomeImage =
+      HOME_IMAGES_POOL[Math.floor(Math.random() * HOME_IMAGES_POOL.length)];
     ads.push({
-      id: `home-${i}`,
-      title: PRODUCT_DATA[i + 8].title,
-      price: PRODUCT_DATA[i + 8].price,
-      image: HOME_IMAGES[i],
+      id: `home-${homeId++}`,
+      title: randomHomeProduct.title,
+      price: randomHomeProduct.price,
+      image: randomHomeImage,
       category: "Home",
       isClicked: false,
     });
   }
 
-  // Shuffle strictly for display variety, but keeping the set fixed
+  // Final shuffle for display order
   return ads.sort(() => Math.random() - 0.5);
 };
+
+const generateAds = async (): Promise<Ad[]> => fetchRandomAds();
 
 export const useAdStore = create<AdState>()(
   persist(
@@ -164,6 +228,7 @@ export const useAdStore = create<AdState>()(
         }
 
         if (lastDailyResetKey !== todayKey) {
+          // Daily reset: unclick existing ads (keep same set for day)
           const resetAds = ads.map((ad) => ({ ...ad, isClicked: false }));
           const shouldResetCycle = rewardDayCount >= 15;
           set({
@@ -178,94 +243,88 @@ export const useAdStore = create<AdState>()(
       };
 
       return {
-      ads: [],
-      balance: 0,
-      lastGenerated: 0,
-      lastDailyResetKey: "",
-      dailyClickCount: 0,
-      rewardDayCount: 0,
-      goalReached: false,
+        ads: [],
+        balance: 0,
+        lastGenerated: 0,
+        lastDailyResetKey: "",
+        dailyClickCount: 0,
+        rewardDayCount: 0,
+        goalReached: false,
 
-      initializeMonth: () => {
-        const now = Date.now();
-        const { lastGenerated, ads } = get();
-
-        // Check if needs reset (first run OR new month)
-        const needsReset =
-          lastGenerated === 0 ||
-          !isSameMonth(new Date(lastGenerated), new Date(now));
-
-        if (needsReset || ads.length === 0) {
+        initializeMonth: async () => {
+          const now = Date.now();
           const todayKey = getPortugalDayKey(now);
+          // Always fetch fresh random ads on page load (fake API)
+          const freshAds = await generateAds();
           set({
-            ads: generateAds(),
+            ads: freshAds,
             lastGenerated: now,
             lastDailyResetKey: todayKey,
             dailyClickCount: 0,
             goalReached: false,
           });
-        }
-      },
+        },
 
-      resetDailyIfNeeded,
+        resetDailyIfNeeded,
 
-      clickAd: (id) => {
-        resetDailyIfNeeded();
+        clickAd: (id) => {
+          resetDailyIfNeeded();
 
-        const {
-          ads: currentAds,
-          balance,
-          dailyClickCount: currentDailyCount,
-          rewardDayCount: currentRewardDayCount,
-        } = get();
-        if (currentDailyCount >= 15) return;
+          const {
+            ads: currentAds,
+            balance,
+            dailyClickCount: currentDailyCount,
+            rewardDayCount: currentRewardDayCount,
+          } = get();
+          if (currentDailyCount >= 15) return;
 
-        const adIndex = currentAds.findIndex((a) => a.id === id);
+          const adIndex = currentAds.findIndex((a) => a.id === id);
 
-        if (adIndex === -1 || currentAds[adIndex].isClicked) return;
+          if (adIndex === -1 || currentAds[adIndex].isClicked) return;
 
-        const newAds = [...currentAds];
-        newAds[adIndex].isClicked = true;
+          const newAds = [...currentAds];
+          newAds[adIndex].isClicked = true;
 
-        // Count total clicked
-        const clickedCount = newAds.filter((a) => a.isClicked).length;
-        const totalAds = newAds.length;
+          // Count total clicked
+          const clickedCount = newAds.filter((a) => a.isClicked).length;
+          const totalAds = newAds.length;
 
-        // Daily click count (max 15 per day)
-        const nextDailyCount = currentDailyCount + 1;
+          // Daily click count (max 15 per day)
+          const nextDailyCount = currentDailyCount + 1;
 
-        // Reward: €2 when 15 clicks are completed in a day
-        let newBalance = balance;
-        let nextRewardDayCount = currentRewardDayCount;
-        if (nextDailyCount === 15) {
-          newBalance += 2;
-          nextRewardDayCount += 1;
-        }
+          // Reward: €2 when 15 clicks are completed in a day
+          let newBalance = balance;
+          let nextRewardDayCount = currentRewardDayCount;
+          if (nextDailyCount === 15) {
+            newBalance += 2;
+            nextRewardDayCount += 1;
+          }
 
-        // Check if all clicked
-        const isGoalReached = clickedCount === totalAds;
+          // Check if all clicked
+          const isGoalReached = clickedCount === totalAds;
 
-        set({
-          ads: newAds,
-          balance: newBalance,
-          dailyClickCount: nextDailyCount,
-          rewardDayCount: nextRewardDayCount,
-          goalReached: isGoalReached,
-        });
-      },
-      resetForDemo: () => {
-        const now = Date.now();
-        set({
-          ads: generateAds(),
-          balance: 0,
-          lastGenerated: now,
-          lastDailyResetKey: getPortugalDayKey(now),
-          dailyClickCount: 0,
-          rewardDayCount: 0,
-          goalReached: false,
-        });
-      },
-    };
+          set({
+            ads: newAds,
+            balance: newBalance,
+            dailyClickCount: nextDailyCount,
+            rewardDayCount: nextRewardDayCount,
+            goalReached: isGoalReached,
+          });
+        },
+        resetForDemo: async () => {
+          const now = Date.now();
+          const freshAds = await generateAds();
+          set({
+            ads: freshAds,
+            balance: 0,
+            lastGenerated: now,
+            lastDailyResetKey: getPortugalDayKey(now),
+            dailyClickCount: 0,
+            rewardDayCount: 0,
+            goalReached: false,
+          });
+        },
+      };
     },
     {
       name: "adclick-data-storage",
