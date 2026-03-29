@@ -270,13 +270,15 @@ export const useAdStore = create<AdState>()(
         clickAd: (id) => {
           resetDailyIfNeeded();
 
-          const {
-            ads: currentAds,
-            balance,
-            dailyClickCount: currentDailyCount,
-            rewardDayCount: currentRewardDayCount,
-          } = get();
-          if (currentDailyCount >= 15) return;
+        const {
+          ads: currentAds,
+          balance,
+          dailyClickCount: currentDailyCount,
+          rewardDayCount: currentRewardDayCount,
+          goalReached: currentGoalReached,
+        } = get();
+        if (currentGoalReached) return;
+        if (currentDailyCount >= 15) return;
 
           const adIndex = currentAds.findIndex((a) => a.id === id);
 
