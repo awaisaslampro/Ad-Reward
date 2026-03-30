@@ -254,15 +254,23 @@ export const useAdStore = create<AdState>()(
         initializeMonth: async () => {
           const now = Date.now();
           const todayKey = getPortugalDayKey(now);
-          // Always fetch fresh random ads on page load (fake API)
-          const freshAds = await generateAds();
-          set({
-            ads: freshAds,
-            lastGenerated: now,
-            lastDailyResetKey: todayKey,
-            dailyClickCount: 0,
-            goalReached: false,
-          });
+          const { lastGenerated, ads } = get();
+
+          const needsReset =
+            lastGenerated === 0 ||
+            !isSameMonth(new Date(lastGenerated), new Date(now)) ||
+            ads.length === 0;
+
+          if (needsReset) {
+            const freshAds = await generateAds();
+            set({
+              ads: freshAds,
+              lastGenerated: now,
+              lastDailyResetKey: todayKey,
+              dailyClickCount: 0,
+              goalReached: false,
+            });
+          }
         },
 
         resetDailyIfNeeded,
@@ -270,15 +278,15 @@ export const useAdStore = create<AdState>()(
         clickAd: (id) => {
           resetDailyIfNeeded();
 
-        const {
-          ads: currentAds,
-          balance,
-          dailyClickCount: currentDailyCount,
-          rewardDayCount: currentRewardDayCount,
-          goalReached: currentGoalReached,
-        } = get();
-        if (currentGoalReached) return;
-        if (currentDailyCount >= 15) return;
+          const {
+            ads: currentAds,
+            balance,
+            dailyClickCount: currentDailyCount,
+            rewardDayCount: currentRewardDayCount,
+            goalReached: currentGoalReached,
+          } = get();
+          if (currentGoalReached) return;
+          if (currentDailyCount >= 15) return;
 
           const adIndex = currentAds.findIndex((a) => a.id === id);
 
